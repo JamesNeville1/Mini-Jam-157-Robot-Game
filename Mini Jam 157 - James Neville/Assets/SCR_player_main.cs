@@ -11,16 +11,23 @@ public class SCR_player_main : MonoBehaviour {
     [SerializeField] private float velocityMax;
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpForceX;
+    
+    [Header("Children References")]
+    [SerializeField] private GameObject playerShootVFX;
+
+    [SerializeField] private Transform shootPoint;
 
     [Header("Other")]
-    [SerializeField] private LayerMask ground;
+    [SerializeField] private LayerMask boxCastLayerMask;
+    [SerializeField] private string groundLayer;
     [SerializeField] private float groundedSpriteRotationSpeed;
     [SerializeField] private float airborneSpriteRotationSpeed;
+    [SerializeField] private float maximumSpriteRotationRange;
 
     [Header("Components (Read Only)")]
     [SerializeField] [MyReadOnly] private Rigidbody2D rb;
     [SerializeField] [MyReadOnly] private SpriteRenderer sr;
-    [SerializeField][MyReadOnly] private Collider2D col;
+    [SerializeField] [MyReadOnly] private Collider2D col;
 
     [Header("Info (Read Only)")]
     [SerializeField] [MyReadOnly] private float inputX;
@@ -35,33 +42,51 @@ public class SCR_player_main : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         col = GetComponentInChildren<Collider2D>();
+
+        
     }
     private void Update() {
         playerWalkCalculations();
-        jumpCheck();
+
+        playerShootCheck();
+
         spriteRotation();
+    }
+    private void OnCollisionStay2D(Collision2D collision) {
+        jumpCheck(); //Optimisation
     }
     private void FixedUpdate() {
         rb.AddForce(new Vector2(inputX, 0) * speed, ForceMode2D.Force);
     }
 
     private void playerWalkCalculations() {
-        if(inputX > 0 && rb.velocity.x < 0 || inputX < 0 && rb.velocity.x > 0) { //If player is trying to go in opposite direction of force
-            inputX = Input.GetAxisRaw("Horizontal") * counterCorrectingSpeed;
-            print(inputX);
-        }
-        else {
-            inputX = Input.GetAxisRaw("Horizontal");
+        inputX = Input.GetAxisRaw("Horizontal");
+        if (inputX > 0 && rb.velocity.x < 0 || inputX < 0 && rb.velocity.x > 0) { //If player is trying to go in opposite direction of force
+            inputX *= counterCorrectingSpeed;
         }
 
-        //if (canJump) {
-            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -velocityMax, velocityMax), rb.velocity.y);
-        //}
+        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -velocityMax, velocityMax), rb.velocity.y); //This causes the velocity bug, y is overriden
+    }
+    private void playerShootCheck() {
+        if(Input.GetMouseButtonDown(0)) {
+            //shoot();
+        }
+    }
+    private void shoot() {
+        playerShootVFX.transform.position = shootPoint.transform.position;
+        playerShootVFX.SetActive(false); playerShootVFX.SetActive(true);
     }
     private void jumpCheck() {        
-        RaycastHit2D groundedBoxCast = Physics2D.BoxCast(col.bounds.center, col.bounds.size, 0, Vector2.down, .1f, ground);
-        if (groundedBoxCast.collider != null && Mathf.Abs(rb.velocity.y) <= .01f) {
-            grounded = true;
+        RaycastHit2D groundedBoxCast = Physics2D.BoxCast(col.bounds.center, col.bounds.size * 1.2f, 0, Vector2.down, .25f, boxCastLayerMask);
+        if (groundedBoxCast.collider != null) {
+            SCR_AI_human enemyScript = groundedBoxCast.collider.gameObject.GetComponentInParent<SCR_AI_human>();
+            if (enemyScript != null) {
+                enemyScript.hit();
+                print("a");
+            }
+            else if(groundedBoxCast.collider.gameObject.layer == LayerMask.NameToLayer(groundLayer) && Mathf.Abs(rb.velocity.y) <= .01f) {
+                grounded = true;
+            }
         }
         else {
             grounded = false;
@@ -70,6 +95,7 @@ public class SCR_player_main : MonoBehaviour {
         if (Input.GetKey(KeyCode.Space)) {
             if (grounded) {
                 jump();
+                grounded = false; //Fix l8r
             }
         }
     }
@@ -84,7 +110,7 @@ public class SCR_player_main : MonoBehaviour {
     }
     private void spriteRotation() {
         float rotationSpeed = (grounded) ? groundedSpriteRotationSpeed : airborneSpriteRotationSpeed;
-        Quaternion unclampedSlerp = Quaternion.Lerp(sr.gameObject.transform.rotation, Quaternion.Euler(0f, 0f, Mathf.Clamp(inputX, -1, 1) * 30), rotationSpeed * Time.deltaTime);
+        Quaternion unclampedSlerp = Quaternion.Lerp(sr.gameObject.transform.rotation, Quaternion.Euler(0f, 0f, Mathf.Clamp(inputX, -1, 1) * maximumSpriteRotationRange), rotationSpeed * Time.deltaTime);
 
         sr.gameObject.transform.rotation = unclampedSlerp;
         

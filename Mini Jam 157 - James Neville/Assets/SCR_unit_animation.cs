@@ -42,10 +42,10 @@ public class SCR_unit_animation : MonoBehaviour {
     }
     #endregion
     #region Setup
-    public void setup(string unitPrefix, RuntimeAnimatorController animController) {
+    public void setup(string unitPrefix, RuntimeAnimatorController animController = null) {
         //Setup unity's animator
         animator = GetComponent<Animator>();
-        animator.runtimeAnimatorController = animController;
+        animator.runtimeAnimatorController ??= animController;
 
         //Add all animations with strings to dictionairy
         animations.Add(AnimationType.IDLE, new animationDataStruct (globalPrefix + unitPrefix + idle, 0));

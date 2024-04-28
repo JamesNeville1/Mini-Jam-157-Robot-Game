@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2008906581444460816}
   - component: {fileID: 3675239626333526193}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0021466166, y: 0.39926147}
+  m_Offset: {x: 0.0021466166, y: 0.40374207}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -75,8 +75,39 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.38608167, y: 0.8196883}
+  m_Size: {x: 0.24, y: 0.8107271}
   m_EdgeRadius: 0
+--- !u!1 &730744974439407315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2069063732462309330}
+  m_Layer: 0
+  m_Name: Shoot Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2069063732462309330
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730744974439407315}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.1, y: 0.72, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4439890992047675189}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3943083348137201704
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,19 +182,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de54d77d8318e31419640907c2a690e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  counterCorrectingSpeed: 5
-  velocityMax: 5
+  speed: 3
+  counterCorrectingSpeed: 8
+  velocityMax: 4
   jumpForce: 16
-  jumpForceX: 3
+  jumpForceX: 6
+  playerShootVFX: {fileID: 0}
+  shootPoint: {fileID: 2069063732462309330}
   ground:
     serializedVersion: 2
     m_Bits: 8
+  groundedSpriteRotationSpeed: 0.8
+  airborneSpriteRotationSpeed: 0.65
+  maximumSpriteRotationRange: 20
   rb: {fileID: 0}
   sr: {fileID: 0}
   col: {fileID: 0}
   inputX: 0
-  canJump: 0
+  grounded: 0
 --- !u!1 &5544485277558818064
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +211,6 @@ GameObject:
   - component: {fileID: 4439890992047675189}
   - component: {fileID: 8458183749077685749}
   - component: {fileID: 1110609743119562602}
-  - component: {fileID: 3696534149800363781}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -194,7 +229,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2069063732462309330}
   m_Father: {fileID: 5788883275095450257}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -236,8 +272,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1317283253
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: -691518373, guid: 6e318c91cac90114d921d7fd65029ad9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -271,17 +307,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3696534149800363781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5544485277558818064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33709406a08d942479bf482be8978ae2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  current: 0
