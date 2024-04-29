@@ -31,10 +31,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 150272229236611253}
-  - {fileID: 4266738969894186149}
   - {fileID: 6325485176886009376}
+  - {fileID: 4266738969894186149}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6942147407199410526
 MonoBehaviour:
@@ -49,10 +49,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.85
-  ground:
+  toBump:
     serializedVersion: 2
     m_Bits: 8
-  wallCheckRange: 0
+  wallCheckRange: 1
+  giveEnergy: 18
+  scaleByOnDeath: 0.15
   ani: {fileID: 0}
   rb: {fileID: 0}
   col: {fileID: 0}
@@ -149,7 +151,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.01709488, y: 0.16784072}
+  m_Offset: {x: -0.01709488, y: 0.33835572}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -160,7 +162,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.30688006, y: 0.32863706}
+  m_Size: {x: 0.30688006, y: 0.6696671}
   m_EdgeRadius: 0
 --- !u!1 &4793760279418766909
 GameObject:
@@ -172,8 +174,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6325485176886009376}
   - component: {fileID: 5976269420876239442}
-  m_Layer: 0
-  m_Name: Trigger Bump Check
+  m_Layer: 8
+  m_Name: Trig (to get)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -187,7 +189,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4793760279418766909}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.126, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -237,7 +239,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.6998563}
+  m_Size: {x: 0.66, y: 0.6998563}
   m_EdgeRadius: 0
 --- !u!1 &5874948566276901737
 GameObject:

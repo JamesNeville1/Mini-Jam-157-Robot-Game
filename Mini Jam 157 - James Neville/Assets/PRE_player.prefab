@@ -141,7 +141,7 @@ Transform:
   - {fileID: 4439890992047675189}
   - {fileID: 2008906581444460816}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &6131623943782325059
 Rigidbody2D:
@@ -182,16 +182,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de54d77d8318e31419640907c2a690e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 6
   counterCorrectingSpeed: 8
   velocityMax: 4
   jumpForce: 16
   jumpForceX: 6
+  yFromEnemyToGroundPound: 0.1
+  energy: 100
+  energyUIRef: {fileID: 0}
   playerShootVFX: {fileID: 0}
   shootPoint: {fileID: 2069063732462309330}
-  ground:
+  boxCastLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 264
+  groundLayer: Ground
   groundedSpriteRotationSpeed: 0.8
   airborneSpriteRotationSpeed: 0.65
   maximumSpriteRotationRange: 20

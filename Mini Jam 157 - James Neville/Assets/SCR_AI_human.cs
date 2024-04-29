@@ -1,4 +1,5 @@
 using SCR_izzet_utils.IzzetAttributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,9 @@ public class SCR_AI_human : MonoBehaviour {
 
     [Header("Main")]
     [SerializeField] private float speed;
-    [SerializeField] private LayerMask ground;
+    [SerializeField] private LayerMask toBump;
     [SerializeField] private float wallCheckRange;
+    [SerializeField] private int giveEnergy;
 
     [Header("Other")]
     [SerializeField] [Tooltip("Runs every 0.05 seconds")] private float scaleByOnDeath;
@@ -24,6 +26,9 @@ public class SCR_AI_human : MonoBehaviour {
     [Header("Info (Read Only)")]
     [SerializeField] [MyReadOnly] private int currentDirection;
 
+    //
+    private Action onUpdate;
+
     private void Start() {
         ani = GetComponentInChildren<SCR_unit_animation>();
         ani.setup("human");
@@ -35,21 +40,34 @@ public class SCR_AI_human : MonoBehaviour {
         sr = GetComponentInChildren<SpriteRenderer>();
 
         currentDirection = startingDirection;
+
+        onUpdate = () => {
+            transform.position += new Vector3(currentDirection, 0) * speed * Time.deltaTime;
+            ani.play(SCR_unit_animation.AnimationType.WALK);
+
+            RaycastHit2D groundedBoxCast = Physics2D.BoxCast(col.bounds.center, col.bounds.size, 0, new Vector2(currentDirection, 0), .5f, toBump);
+            if (groundedBoxCast.collider == null) return;
+
+            bool shouldTurn =
+                groundedBoxCast.collider.gameObject.layer == LayerMask.NameToLayer("Ground") //||
+                                                                                             //groundedBoxCast.collider.gameObject.layer == LayerMask.NameToLayer("AI Slam")
+                ;
+            if (shouldTurn)
+            {
+                //print("ChangeDir");
+                currentDirection = -currentDirection;
+                sr.flipX = !sr.flipX;
+            }
+        };
     }
     private void Update() {
-        transform.position += new Vector3(currentDirection, 0) * speed * Time.deltaTime;
-        ani.play(SCR_unit_animation.AnimationType.WALK);
-    }
-    private void OnTriggerStay2D(Collider2D collision) {
-        RaycastHit2D groundedBoxCast = Physics2D.BoxCast(col.bounds.center, col.bounds.size, 0, new Vector2(currentDirection, 0), .25f, ground);
-        if (groundedBoxCast.collider != null) {
-            print("ChangeDir");
-            currentDirection = -currentDirection;
-            sr.flipX = !sr.flipX;
-        }
+        onUpdate.Invoke();
     }
     public void hit() {
         StartCoroutine(death());
+        onUpdate = () => { };
+        SCR_player_main.instance.adjustEnergy(giveEnergy);
+        Destroy(col.gameObject);
     }
 
     private IEnumerator death() {
